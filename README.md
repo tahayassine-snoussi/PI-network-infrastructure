@@ -239,7 +239,7 @@ sequenceDiagram
     R3->>R1: IPsec Accept
     Note over R1,R3: IPsec SAs established (bidirectional) ✅
 
-    Note over R1,BB,R3: Data flows encrypted through tunnel
+    Note over R1,R3: Data flows encrypted through tunnel
     R1->>BB: [ESP] Encrypted payload (AES)
     BB->>R3: [ESP] Encrypted payload (AES)
     R3->>R1: [ESP] Encrypted response
