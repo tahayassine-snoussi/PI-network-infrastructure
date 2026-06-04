@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Projet Intégré — Réseaux et Systèmes</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --fg: #1a1a1a;
+            --muted: #555;
+            --accent: #1e4a8f;
+            --accent-light: #2a5cb0;
+            --accent-sec: #3a6fc7;
+            --accent-ter: #4a82d4;
+            --border: #d0d0d0;
+            --code-bg: #f4f4f4;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #e0e0e0;
+            --shadow: rgba(0,0,0,0.08);
+            --figure-bg: #f0f0f0;
+            --table-header: #e8eef5;
+            --row-alt: #f8f9fa;
+            --success: #2e7d32;
+        }
+        [data-theme="dark"] {
+            --bg: #121212;
+            --fg: #e0e0e0;
+            --muted: #aaa;
+            --accent: #5c9dff;
+            --accent-light: #7abaff;
+            --accent-sec: #9ecfff;
+            --accent-ter: #b8dcff;
+            --border: #333;
+            --code-bg: #1e1e1e;
+            --sidebar-bg: #1a1a1a;
+            --sidebar-border: #2a2a2a;
+            --shadow: rgba(0,0,0,0.3);
+            --figure-bg: #1e1e1e;
+            --table-header: #1e2a3a;
+            --row-alt: #1a1a1a;
+            --success: #66bb6a;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0; padding: 0;
+            font-family: "Latin Modern Roman", "Computer Modern", Georgia, "Times New Roman", serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.65;
+            font-size: 16px;
+            transition: background 0.3s, color 0.3s;
+        }
+        /* Layout */
+        .page-wrapper {
+            display: block;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            min-width: 0;
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 280px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            z-index: 100;
+            box-shadow: 2px 0 8px var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--accent);
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .sidebar-header .meta {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+        }
+        .toc { list-style: none; padding: 0; margin: 0; }
+        .toc li { margin: 0; }
+        .toc a {
+            display: block;
+            padding: 0.35rem 0.6rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .toc a:hover { background: rgba(128,128,128,0.08); color: var(--fg); }
+        .toc a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(30,74,143,0.08); font-weight: 600; }
+        .toc .toc-h1 { font-weight: 700; color: var(--fg); margin-top: 0.8rem; font-size: 0.95rem; }
+        .toc .toc-h2 { padding-left: 1.2rem; }
+        .toc .toc-h3 { padding-left: 2rem; font-size: 0.85rem; }
+        .toc .toc-h4 { padding-left: 2.8rem; font-size: 0.82rem; }
+        /* Main content */
+        main {
+            margin-left: 280px;
+            padding: 2.5rem 3rem;
+            max-width: 1000px;
+            min-width: 0;
+        }
+        /* Title page */
+        .title-page {
+            text-align: center;
+            padding: 2rem 0 3rem;
+            border-bottom: 3px double var(--border);
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+        .institution {
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            line-height: 1.3;
+        }
+        .location { font-size: clamp(0.9rem, 1.8vw, 1rem); color: var(--muted); margin-bottom: 2rem; }
+        .hrule {
+            border: none;
+            border-top: 2px solid var(--fg);
+            margin: 1rem auto;
+            width: 80%;
+            max-width: 600px;
+        }
+        .title-main {
+            font-size: clamp(1.6rem, 4vw, 2.6rem);
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0.5rem 0;
+            line-height: 1.15;
+            text-wrap: balance;
+        }
+        .title-sub {
+            font-size: clamp(1.2rem, 3vw, 1.7rem);
+            font-weight: 700;
+            color: var(--accent-light);
+            margin: 0.3rem 0 1rem;
+            text-wrap: balance;
+        }
+        .title-topic {
+            font-size: clamp(1rem, 2.2vw, 1.25rem);
+            font-style: italic;
+            color: var(--muted);
+            margin: 1.5rem auto 2rem;
+            max-width: 700px;
+            line-height: 1.4;
+        }
+        .title-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: left;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+        }
+        .title-info > div { flex: 1 1 200px; }
+        .title-info .label { font-weight: 700; }
+        .title-date { margin-top: 2rem; font-size: 1rem; }
+        .title-page figure { margin: 1.5rem auto; }
+        .title-page img { max-height: 280px; width: auto; }
+        /* Typography */
+        h1, h2, h3, h4, h5 {
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            scroll-margin-top: 2rem;
+        }
+        h1 { font-size: 2.2rem; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 0.5rem; }
+        h2 { font-size: 1.7rem; color: var(--accent-light); margin-top: 2rem; }
+        h3 { font-size: 1.35rem; color: var(--accent-sec); }
+        h4 { font-size: 1.1rem; color: var(--accent-ter); }
+        p { margin: 0.8rem 0; text-align: justify; hyphens: auto; }
+        a { color: var(--accent-light); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        strong { font-weight: 700; }
+        /* Chapter numbering via CSS */
+        .chapter { counter-reset: section; }
+        .chapter > h1::before { content: "Chapitre " attr(data-number) " : "; }
+        .section { counter-reset: subsection; }
+        .section > h2::before { counter-increment: section; content: counter(section) ". "; }
+        .subsection { counter-reset: subsubsection; }
+        .subsection > h3::before { counter-increment: subsection; content: counter(section) "." counter(subsection) ". "; }
+        .subsubsection > h4::before { counter-increment: subsubsection; content: counter(section) "." counter(subsection) "." counter(subsubsection) ". "; }
+        /* Lists */
+        ul, ol { margin: 0.8rem 0; padding-left: 2rem; }
+        li { margin: 0.3rem 0; }
+        /* Figures */
+        figure {
+            margin: 1.5rem auto;
+            text-align: center;
+            max-width: 100%;
+        }
+        .figure-placeholder {
+            background: var(--figure-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2rem 1rem;
+            color: var(--muted);
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin: 0 auto;
+            display: inline-block;
+            min-width: 60%;
+        }
+        figcaption, .caption {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 0.6rem;
+            text-align: center;
+        }
+        figcaption strong, .caption strong { color: var(--fg); }
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.92rem;
+            box-shadow: 0 1px 3px var(--shadow);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        thead { background: var(--table-header); }
+        th, td { padding: 0.65rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 700; color: var(--fg); border-top: 2px solid var(--fg); border-bottom: 2px solid var(--fg); }
+        tbody tr:last-child td { border-bottom: 2px solid var(--fg); }
+        tbody tr:nth-child(even) { background: var(--row-alt); }
+        .table-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+        .table-caption strong { color: var(--fg); }
+        /* Code blocks */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem 1.2rem;
+            overflow-x: auto;
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            position: relative;
+            margin: 1.2rem 0;
+        }
+        code {
+            font-family: "Consolas", "Monaco", "Courier New", monospace;
+            font-size: 0.9em;
+            background: rgba(128,128,128,0.12);
+            padding: 0.15rem 0.35rem;
+            border-radius: 3px;
+        }
+        pre code { background: none; padding: 0; border-radius: 0; }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--table-header);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: -1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+        .code-header button {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.2rem 0.6rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+        .code-header button:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .code-label { font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        /* Inline code in listings styled like LaTeX lstlisting */
+        .listing-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin: -0.5rem 0 1rem 0;
+        }
+        .listing-caption strong { color: var(--fg); }
+        /* Boxes (fbox) */
+        .fbox {
+            border: 1px solid var(--fg);
+            padding: 1.5rem;
+            margin: 1.5rem auto;
+            max-width: 90%;
+            text-align: center;
+            background: var(--bg);
+            border-radius: 4px;
+        }
+        .fbox table { margin: 0 auto; box-shadow: none; }
+        .fbox td, .fbox th { border: 1px solid var(--border); }
+        /* Utility */
+        .text-center { text-align: center; }
+        .text-green { color: var(--success); font-weight: 700; }
+        .text-red { color: #c62828; font-weight: 700; }
+        .text-orange { color: #ef6c00; font-weight: 700; }
+        .text-blue { color: var(--accent); font-weight: 700; }
+        /* Controls */
+        .controls {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 200;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .ctrl-btn {
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--fg);
+            box-shadow: 0 2px 6px var(--shadow);
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px; height: 44px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 200;
+        }
+        .back-to-top:hover { background: var(--accent-light); }
+        /* Mobile sidebar toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 300;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+        }
+        /* Print */
+        @media print {
+            .sidebar, .controls, .back-to-top, .menu-toggle, .sidebar-overlay { display: none !important; }
+            main { margin-left: 0 !important; max-width: 100%; padding: 1rem; }
+            body { background: white; color: black; }
+            pre { white-space: pre-wrap; word-wrap: break-word; }
+            a { text-decoration: none; color: black; }
+        }
+        /* Responsive */
+        @media (max-width: 1024px) {
+            main { margin-left: 0; padding: 1.5rem; max-width: 100%; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .menu-toggle { display: block; }
+            .sidebar-overlay.show { display: block; }
+            .title-info { flex-direction: column; align-items: center; gap: 1rem; }
+            .title-info > div { width: 100%; text-align: center; }
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.3rem; }
+            h3 { font-size: 1.1rem; }
+            pre { font-size: 0.8rem; padding: 0.8rem; }
+            table { font-size: 0.82rem; }
+            th, td { padding: 0.4rem 0.5rem; }
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: #444; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="ctrl-btn" onclick="toggleTheme()" title="Thème clair/sombre">&#9788;&#xFE0F;</button>
+        <button class="ctrl-btn" onclick="window.print()" title="Imprimer / PDF">&#128424;&#xFE0F;</button>
+    </div>
+    <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="page-wrapper">
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Rapport Projet Intégré</h1>
+                <div class="meta">Réseaux et Systèmes<br>ESPRIT — 2024-2025</div>
+            </div>
+            <ul class="toc" id="toc"></ul>
+        </nav>
+
+        <main id="main-content">
+            <!-- ==================== TITLE PAGE ==================== -->
+            <div class="title-page">
+                <div class="institution">ESPRIT — École Supérieure Privée d'Ingénierie et de Technologies</div>
+                <div class="location">Tunisie</div>
+                <hr class="hrule">
+                <div class="title-main">Rapport de Projet Intégré</div>
+                <div class="title-sub">Réseaux et Systèmes</div>
+                <hr class="hrule">
+                <div class="title-topic"><em>Déploiement d'une infrastructure réseau multiservice pour TechSolutions SARL</em></div>
+                <div class="title-info">
+                    <div>
+                        <span class="label">Classe :</span> 3A33<br>
+                        <span class="label">Année Universitaire :</span> 2024–2025
+                    </div>
+                    <div style="text-align:right">
+                        <span class="label">Projet intégré :</span><br>
+                        Réseaux et Systèmes
+                    </div>
+                </div>
+                <figure>
+                    <img src="./media/image1.jpeg" alt="Topologie globale de l'infrastructure" style="max-width:100%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                    <figcaption><strong>Figure 1.</strong> Vue globale de la topologie réseau</figcaption>
+                </figure>
+                <figure>
+                    <img src="./media/image2.png" alt="" style="max-width:100%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                </figure>
+                <div class="title-date">Juin 2026</div>
+            </div>
+
+            <!-- ==================== FRONT MATTER ==================== -->
+            <section class="chapter" id="toc-page">
+                <h1 data-number="0">Table des matières</h1>
+                <p><em>La navigation est disponible dans la barre latérale gauche.</em></p>
+            </section>
+
+            <section class="chapter" id="lof">
+                <h1 data-number="0">Liste des figures</h1>
+                <ul>
+                    <li><a href="#fig-topo-globale">Figure 1.</a> Vue globale de la topologie réseau</li>
+                    <li><a href="#fig-backbone">Figure 1.1</a> Topologie backbone simulée dans GNS3</li>
+                    <li><a href="#fig-rz1-config">Figure 1.2</a> Exemple de configuration d'une interface de RZ-1</li>
+                    <li><a href="#fig-rz1-interfaces">Figure 1.3</a> État des interfaces de RZ-1</li>
+                    <li><a href="#fig-rz2-config">Figure 1.4</a> Exemple de configuration d'une interface de RZ-2</li>
+                    <li><a href="#fig-rz2-interfaces">Figure 1.5</a> État des interfaces de RZ-2</li>
+                    <li><a href="#fig-rz3-config">Figure 1.6</a> Exemple de configuration d'une interface de RZ-3</li>
+                    <li><a href="#fig-rz3-interfaces">Figure 1.7</a> État des interfaces de RZ-3</li>
+                    <li><a href="#fig-rz4-config">Figure 1.8</a> Exemple de configuration d'une interface de RZ-4</li>
+                    <li><a href="#fig-rz4-interfaces">Figure 1.9</a> État des interfaces de RZ-4</li>
+                    <li><a href="#fig-rz5-interfaces">Figure 1.10</a> État des interfaces de RZ-5</li>
+                    <li><a href="#fig-web-topo">Figure 1.11</a> Topologie du département Web/Marketing dans GNS3</li>
+                    <li><a href="#fig-it-topo">Figure 1.12</a> Topologie du département Supervision/IT dans GNS3</li>
+                    <li><a href="#fig-bd-topo">Figure 1.13</a> Topologie du département Base de données/Gestion dans GNS3</li>
+                    <li><a href="#fig-nfs-topo">Figure 1.14</a> Topologie du département Partage/Collaboration dans GNS3</li>
+                    <li><a href="#fig-vm-web1">Figure 2.1</a> Création de la VM Ubuntu dans VMware — Étape 1</li>
+                    <li><a href="#fig-vm-web2">Figure 2.2</a> Création de la VM Ubuntu dans VMware — Étape 2</li>
+                    <li><a href="#fig-vm-web3">Figure 2.3</a> Création de la VM Ubuntu dans VMware — Étape 3</li>
+                    <li><a href="#fig-vmnet2">Figure 2.4</a> Configuration de l'adaptateur VMnet2 Host-Only</li>
+                    <li><a href="#fig-gns3-cloud">Figure 2.5</a> Topologie GNS3 avec le nœud Cloud connecté au switch</li>
+                    <li><a href="#fig-cloud-vmnet2">Figure 2.6</a> Configuration du nœud Cloud lié à VMnet2</li>
+                    <li><a href="#fig-yaml-web1">Figure 2.7</a> Configuration réseau de l'interface ens33 dans le fichier YAML</li>
+                    <li><a href="#fig-yaml-web2">Figure 2.8</a> Validation de la configuration Netplan</li>
+                    <li><a href="#fig-ping-web1">Figure 2.9</a> Test de ping dans le LAN vers l'interface du routeur</li>
+                    <li><a href="#fig-ping-web2">Figure 2.10</a> Test de ping à partir d'un PC dans le LAN</li>
+                    <li><a href="#fig-nfs-install">Figure 2.11</a> Installation et configuration du serveur NFS</li>
+                    <li><a href="#fig-nfs-users">Figure 2.12</a> Gestion des utilisateurs et des permissions NFS</li>
+                    <li><a href="#fig-nfs-script">Figure 2.13</a> Script Shell d'automatisation du service NFS</li>
+                    <li><a href="#fig-nfs-yaml">Figure 2.14</a> Fichier YAML pour le service NFS</li>
+                    <li><a href="#fig-nfs-ping">Figure 2.15</a> Tests de ping pour le service NFS</li>
+                    <li><a href="#fig-prometheus">Figure 2.16</a> Interface Prometheus — Targets actifs</li>
+                    <li><a href="#fig-grafana">Figure 2.17</a> Tableau de bord Grafana</li>
+                    <li><a href="#fig-alerts">Figure 2.18</a> Configuration des alertes de supervision</li>
+                    <li><a href="#fig-mon-script">Figure 2.19</a> Script Shell d'automatisation du monitoring</li>
+                    <li><a href="#fig-db-topo">Figure 2.20</a> Topologie GNS3 pour le service Base de données</li>
+                    <li><a href="#fig-db-yaml">Figure 2.21</a> Fichier YAML pour le service Base de données</li>
+                    <li><a href="#fig-db-ping">Figure 2.22</a> Tests de ping pour le service Base de données</li>
+                    <li><a href="#fig-db-install">Figure 2.23</a> Installation du serveur MySQL et du serveur Web Apache</li>
+                    <li><a href="#fig-db-create">Figure 2.24</a> Création de la base de données</li>
+                    <li><a href="#fig-db-users">Figure 2.25</a> Création des utilisateurs et attribution des privilèges</li>
+                    <li><a href="#fig-db-conn1">Figure 2.26</a> Configuration de la connexion entre l'application Web et la base de données</li>
+                    <li><a href="#fig-db-conn2">Figure 2.27</a> Fichier de connexion à la base de données</li>
+                    <li><a href="#fig-db-web">Figure 2.28</a> Affichage des données de la base via la page Web</li>
+                    <li><a href="#fig-db-script">Figure 2.29</a> Script Shell d'automatisation du service Web et Base de données</li>
+                    <li><a href="#fig-defense-depth">Figure 3.1</a> Synthèse de l'architecture Defense in Depth</li>
+                    <li><a href="#fig-attack-flow">Figure 3.2</a> Flux d'attaque et barrières de sécurité</li>
+                </ul>
+            </section>
+
+            <section class="chapter" id="lot">
+                <h1 data-number="0">Liste des tableaux</h1>
+                <ul>
+                    <li><a href="#tab-vlsm-demandes">Tableau 1.1</a> Demande d'adresses IP pour chaque sous-réseau du plan VLSM</li>
+                    <li><a href="#tab-vlsm-detail">Tableau 1.2</a> Adresses réseau, diffusion et valides pour chaque sous-réseau</li>
+                    <li><a href="#tab-sec-stack">Tableau 3.1</a> Matrice de la stack de sécurité</li>
+                    <li><a href="#tab-acl-matrix">Tableau 3.2</a> Matrice des flux de trafic ACL</li>
+                    <li><a href="#tab-ipsec-params">Tableau 3.3</a> Paramètres du tunnel IPsec R1 ↔ R3</li>
+                    <li><a href="#tab-vpn-compare">Tableau 3.4</a> Comparaison des solutions VPN</li>
+                    <li><a href="#tab-pfsense-zones">Tableau 3.5</a> Architecture des zones pfSense</li>
+                    <li><a href="#tab-pfsense-rules">Tableau 3.6</a> Règles de firewall pfSense</li>
+                    <li><a href="#tab-acl-vs-pfsense">Tableau 3.7</a> Comparaison ACL Cisco vs pfSense</li>
+                    <li><a href="#tab-test-conn">Tableau 4.1</a> Matrice des tests de connectivité</li>
+                </ul>
+            </section>
+
+            <!-- ==================== CHAPTER 1 ==================== -->
+            <section class="chapter" id="chap-preparation">
+                <h1 data-number="1">Préparation du Réseau</h1>
+
+                <section class="section" id="sec-topologie">
+                    <h2>Topologie du Réseau</h2>
+
+                    <section class="subsection" id="subsec-schema-global">
+                        <h3>Schéma global de l'infrastructure</h3>
+                        <p>La topologie mise en place s'articule autour d'un <strong>backbone public</strong> composé de cinq routeurs (<strong>RZ-1</strong> à <strong>RZ-5</strong>). Le routeur <strong>RZ-5</strong> est chargé de la connexion vers l'extérieur via un nœud <strong>NAT-Internet</strong>, simulant la passerelle fournie par le FAI.</p>
+                        <p>Chaque département est représenté par une zone de service distincte, composée d'un routeur (<strong>R1</strong> à <strong>R4</strong>), d'un commutateur et d'un ensemble de postes clients. Les réseaux internes des services utilisent des <strong>adresses privées</strong>, tandis que toutes les liaisons inter-routeurs (backbone et accès au backbone) utilisent des <strong>sous-réseaux publics</strong> dédiés.</p>
+                    </section>
+
+                    <section class="subsection" id="subsec-structure-globale">
+                        <h3>Structure globale du réseau</h3>
+                        <p>Les composants principaux sont :</p>
+                        <ul>
+                            <li><strong>Backbone maillé</strong> : 5 routeurs RZ-1 à RZ-5 interconnectés en maillage complet</li>
+                            <li><strong>4 zones de service</strong> : Web/Marketing, Supervision/IT, Base de données, Gestion Partage/Collaboration</li>
+                            <li><strong>NAT-Internet</strong> : Point de sortie unique vers l'extérieur via RZ-5</li>
+                            <li><strong>Tunnels UDP GNS3</strong> : Interconnexion entre machines physiques distantes</li>
+                        </ul>
+                    </section>
+
+                    <section class="subsection" id="subsec-maillage">
+                        <h3>Justification du maillage du backbone</h3>
+                        <p>Le backbone adopte une <strong>topologie maillée complète</strong>, chaque routeur étant directement connecté à tous les autres. Ce choix apporte plusieurs avantages structurants :</p>
+                        <ul>
+                            <li><strong>Tolérance élevée aux pannes</strong> : la défaillance d'un lien n'interrompt pas la circulation du trafic.</li>
+                            <li><strong>Chemins multiples</strong> : l'algorithme SPF d'OSPF peut sélectionner le meilleur chemin en fonction du coût.</li>
+                            <li><strong>Répartition de charge</strong> et optimisation du routage.</li>
+                            <li><strong>Performance et stabilité</strong> accrues pour un réseau multi-départements.</li>
+                        </ul>
+                        <p>Cette structure robuste est particulièrement adaptée aux environnements critiques ou segmentés en plusieurs services indépendants.</p>
+                    </section>
+
+                    <section class="subsection" id="subsec-comptage">
+                        <h3>Comptage des sous-réseaux</h3>
+                        <p>Les besoins en sous-réseaux se répartissent comme suit :</p>
+                        <ul>
+                            <li><strong>4 sous-réseaux privés</strong> : un pour chaque LAN de service (SR1 à SR4).</li>
+                            <li><strong>14 sous-réseaux publics</strong>, incluant :
+                                <ul>
+                                    <li><strong>10</strong> pour les liaisons du backbone (maillage complet entre RZ-1 à RZ-5)</li>
+                                    <li><strong>4</strong> pour les liaisons RZ-<em>x</em> ↔ R<em>x</em> (accès des services au backbone)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p><strong>Total : 18 sous-réseaux.</strong></p>
+                    </section>
+
+                    <section class="subsection" id="subsec-nat">
+                        <h3>Rôle du nœud NAT-Internet</h3>
+                        <p>Le nœud <strong>NAT-Internet</strong>, placé derrière le routeur central <strong>RZ-5</strong>, assure la conversion des adresses internes vers le réseau externe. Ce positionnement garantit :</p>
+                        <ul>
+                            <li>Une <strong>gestion centralisée</strong> de l'accès Internet</li>
+                            <li>Une <strong>sécurisation</strong> des flux sortants et entrants</li>
+                            <li>Une cohérence avec les environnements réels, où un seul routeur frontière assure le NAT vers le FAI</li>
+                        </ul>
+                        <p>Ainsi, tous les services internes peuvent accéder à Internet via un point unique et contrôlé.</p>
+                    </section>
+
+                    <section class="subsection" id="subsec-repartition">
+                        <h3>Répartition sur plusieurs machines physiques</h3>
+                        <p>Pour des raisons de performance et de clarté, la topologie est répartie sur <strong>cinq machines physiques</strong> distinctes :</p>
+                        <ul>
+                            <li><strong>1 machine</strong> dédiée au backbone complet (RZ-1 à RZ-5 + NAT)</li>
+                            <li><strong>4 machines</strong> dédiées aux services (SR1 à SR4)</li>
+                        </ul>
+                        <p>Chaque routeur de service est relié à son routeur d'accès du backbone à travers un <strong>tunnel UDP GNS3</strong>, reproduisant le comportement d'un câble physique entre deux équipements distants. Le routage entre machines s'appuie sur des <strong>routes statiques</strong> assurant l'accessibilité des réseaux privés et publics.</p>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-vlsm">
+                    <h2>Plan d'adressage VLSM</h2>
+
+                    <section class="subsection" id="subsec-vlsm-besoins">
+                        <h3>Tableau des besoins en adresses</h3>
+                        <p>Avant de procéder à l'allocation des adresses IP pour notre réseau d'entreprise, nous avons identifié les besoins en termes de nombre d'adresses pour chaque sous-réseau.</p>
+                        <p>Pour optimiser l'utilisation de l'espace d'adressage disponible et éviter le gaspillage, nous avons choisi la méthode <strong>VLSM (Variable Length Subnet Mask)</strong>. Cette méthode permet d'adapter le masque de sous-réseau en fonction du nombre réel d'hôtes nécessaires dans chaque segment, offrant ainsi une flexibilité et une efficacité accrues.</p>
+
+                        <div class="table-caption" id="tab-vlsm-demandes"><strong>Tableau 1.1</strong> — Demande d'adresses IP pour chaque sous-réseau du plan VLSM</div>
+                        <table>
+                            <thead>
+                                <tr><th>Sous-réseau</th><th>Routeurs</th><th>Adresses totales demandées</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>SR1 (Web/Marketing)</td><td>R1</td><td>6810 + 3 = 6813</td></tr>
+                                <tr><td>SR2 (Supervision/IT)</td><td>R2</td><td>1270 + 3 = 1273</td></tr>
+                                <tr><td>SR3 (BD/Gestion)</td><td>R3</td><td>424 + 3 = 427</td></tr>
+                                <tr><td>SR4 (Partage/Collab)</td><td>R4</td><td>192 + 3 = 195</td></tr>
+                                <tr><td>SR5 (Backbone)</td><td>RZ1–RZ5</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR6 (Backbone)</td><td>RZ2–RZ5</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR7 (Backbone)</td><td>RZ3–RZ5</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR8 (Backbone)</td><td>RZ4–RZ5</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR9 (Backbone)</td><td>RZ1–RZ2</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR10 (Backbone)</td><td>RZ2–RZ3</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR11 (Backbone)</td><td>RZ3–RZ4</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR12 (Backbone)</td><td>RZ1–RZ3</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR13 (Backbone)</td><td>RZ2–RZ4</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR14 (Backbone)</td><td>RZ1–RZ4</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR15 (Accès)</td><td>RZ1–R1</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR16 (Accès)</td><td>RZ2–R2</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR17 (Accès)</td><td>RZ3–R3</td><td>2 + 2 = 4</td></tr>
+                                <tr><td>SR18 (Accès)</td><td>RZ4–R4</td><td>2 + 2 = 4</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-vlsm-detail">
+                        <h3>Plan d'adressage détaillé</h3>
+                        <p>Cette section présente le plan d'adressage détaillé pour chaque sous-réseau du réseau. Elle inclut les masques de sous-réseau calculés via VLSM, les adresses réseau et de diffusion, ainsi que les plages d'adresses IP valides.</p>
+
+                        <div class="table-caption" id="tab-vlsm-detail"><strong>Tableau 1.2</strong> — Adresses réseau, diffusion et valides pour chaque sous-réseau</div>
+                        <table>
+                            <thead>
+                                <tr><th>SR</th><th>MSR</th><th>@ Réseau</th><th>@ Diffusion</th><th>@ Valides</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>SR1</td><td>/19</td><td>10.10.0.0</td><td>10.10.31.255</td><td>[10.10.0.1 – 10.10.31.254]</td></tr>
+                                <tr><td>SR2</td><td>/21</td><td>10.10.32.0</td><td>10.10.39.255</td><td>[10.10.32.1 – 10.10.39.254]</td></tr>
+                                <tr><td>SR3</td><td>/23</td><td>10.10.40.0</td><td>10.10.41.255</td><td>[10.10.40.1 – 10.10.41.254]</td></tr>
+                                <tr><td>SR4</td><td>/24</td><td>10.10.42.0</td><td>10.10.42.255</td><td>[10.10.42.1 – 10.10.42.254]</td></tr>
+                                <tr><td>SR5</td><td>/30</td><td>50.50.50.0</td><td>50.50.50.3</td><td>[50.50.50.1 – 50.50.50.2]</td></tr>
+                                <tr><td>SR6</td><td>/30</td><td>50.50.50.4</td><td>50.50.50.7</td><td>[50.50.50.5 – 50.50.50.6]</td></tr>
+                                <tr><td>SR7</td><td>/30</td><td>50.50.50.8</td><td>50.50.50.11</td><td>[50.50.50.9 – 50.50.50.10]</td></tr>
+                                <tr><td>SR8</td><td>/30</td><td>50.50.50.12</td><td>50.50.50.15</td><td>[50.50.50.13 – 50.50.50.14]</td></tr>
+                                <tr><td>SR9</td><td>/30</td><td>50.50.50.16</td><td>50.50.50.19</td><td>[50.50.50.17 – 50.50.50.18]</td></tr>
+                                <tr><td>SR10</td><td>/30</td><td>50.50.50.20</td><td>50.50.50.23</td><td>[50.50.50.21 – 50.50.50.22]</td></tr>
+                                <tr><td>SR11</td><td>/30</td><td>50.50.50.24</td><td>50.50.50.27</td><td>[50.50.50.25 – 50.50.50.26]</td></tr>
+                                <tr><td>SR12</td><td>/30</td><td>50.50.50.28</td><td>50.50.50.31</td><td>[50.50.50.29 – 50.50.50.30]</td></tr>
+                                <tr><td>SR13</td><td>/30</td><td>50.50.50.32</td><td>50.50.50.35</td><td>[50.50.50.33 – 50.50.50.34]</td></tr>
+                                <tr><td>SR14</td><td>/30</td><td>50.50.50.36</td><td>50.50.50.39</td><td>[50.50.50.37 – 50.50.50.38]</td></tr>
+                                <tr><td>SR15</td><td>/30</td><td>50.50.50.40</td><td>50.50.50.43</td><td>[50.50.50.41 – 50.50.50.42]</td></tr>
+                                <tr><td>SR16</td><td>/30</td><td>50.50.50.44</td><td>50.50.50.47</td><td>[50.50.50.45 – 50.50.50.46]</td></tr>
+                                <tr><td>SR17</td><td>/30</td><td>50.50.50.48</td><td>50.50.50.51</td><td>[50.50.50.49 – 50.50.50.50]</td></tr>
+                                <tr><td>SR18</td><td>/30</td><td>50.50.50.52</td><td>50.50.50.55</td><td>[50.50.50.53 – 50.50.50.54]</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-gns3">
+                    <h2>Configuration dans GNS3</h2>
+
+                    <section class="subsection" id="subsec-backbone">
+                        <h3>Backbone</h3>
+
+                        <section class="subsubsection" id="subsubsec-topo-backbone">
+                            <h4>Topologie backbone</h4>
+                            <figure id="fig-backbone">
+                                <img src="./media/image4.jpeg" alt="Topologie backbone simulée dans GNS3" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                <figcaption><strong>Figure 1.1</strong> — Topologie backbone simulée dans GNS3</figcaption>
+                            </figure>
+                        </section>
+
+                        <section class="subsubsection" id="subsubsec-config-backbone">
+                            <h4>Configuration des routeurs du backbone</h4>
+                            <p>Pour configurer le backbone, nous avons assigné des adresses IP à chaque interface des routeurs en suivant les sous-réseaux publics définis dans nos tables VLSM. Chaque interface a été activée à l'aide de la commande <code>no shutdown</code> et les configurations ont été sauvegardées avec <code>write memory</code> pour garantir leur persistance.</p>
+                            <p>Dans un premier temps, nous avons utilisé le <strong>routage statique</strong> pour vérifier la connectivité et tester l'ensemble des liens entre les routeurs. Cette approche nous permet de contrôler précisément les chemins empruntés par le trafic et de nous assurer que toutes les interfaces communiquent correctement. Une fois cette vérification terminée, nous migrerons vers le protocole <strong>OSPF</strong> afin de bénéficier de la convergence automatique et d'une gestion dynamique des routes pour l'ensemble du backbone.</p>
+
+                            <section class="subsubsection" id="subsubsec-rz1">
+                                <h4>Configuration de RZ-1</h4>
+                                <p>Les figures ci-dessous illustrent la configuration d'une interface sur le routeur <strong>RZ-1</strong>, ainsi que l'état des interfaces avec la commande <code>show ip interface brief</code>, confirmant leur activation et l'assignation correcte des adresses IP.</p>
+                                <figure id="fig-rz1-config">
+                                    <img src="./media/image5.jpeg" alt="Exemple de configuration d'une interface de RZ-1" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.2</strong> — Exemple de configuration d'une interface de RZ-1</figcaption>
+                                </figure>
+                                <figure id="fig-rz1-interfaces">
+                                    <img src="./media/image6.png" alt="État des interfaces de RZ-1" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.3</strong> — État des interfaces de RZ-1</figcaption>
+                                </figure>
+                            </section>
+
+                            <section class="subsubsection" id="subsubsec-rz2">
+                                <h4>Configuration de RZ-2</h4>
+                                <figure id="fig-rz2-config">
+                                    <img src="./media/image7.jpeg" alt="Exemple de configuration d'une interface de RZ-2" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.4</strong> — Exemple de configuration d'une interface de RZ-2</figcaption>
+                                </figure>
+                                <figure id="fig-rz2-interfaces">
+                                    <img src="./media/image8.png" alt="État des interfaces de RZ-2" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.5</strong> — État des interfaces de RZ-2</figcaption>
+                                </figure>
+                            </section>
+
+                            <section class="subsubsection" id="subsubsec-rz3">
+                                <h4>Configuration de RZ-3</h4>
+                                <figure id="fig-rz3-config">
+                                    <img src="./media/image9.png" alt="Exemple de configuration d'une interface de RZ-3" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.6</strong> — Exemple de configuration d'une interface de RZ-3</figcaption>
+                                </figure>
+                                <figure id="fig-rz3-interfaces">
+                                    <img src="./media/image10.png" alt="État des interfaces de RZ-3" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.7</strong> — État des interfaces de RZ-3</figcaption>
+                                </figure>
+                            </section>
+
+                            <section class="subsubsection" id="subsubsec-rz4">
+                                <h4>Configuration de RZ-4</h4>
+                                <figure id="fig-rz4-config">
+                                    <img src="./media/image11.jpeg" alt="Exemple de configuration d'une interface de RZ-4" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.8</strong> — Exemple de configuration d'une interface de RZ-4</figcaption>
+                                </figure>
+                                <figure id="fig-rz4-interfaces">
+                                    <img src="./media/image12.png" alt="État des interfaces de RZ-4" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.9</strong> — État des interfaces de RZ-4</figcaption>
+                                </figure>
+                            </section>
+
+                            <section class="subsubsection" id="subsubsec-rz5">
+                                <h4>Configuration de RZ-5</h4>
+                                <p>La figure ci-dessous présente l'état des interfaces du routeur principal <strong>RZ-5</strong> avec la commande <code>show ip interface brief</code>. Ce routeur servira à l'avenir de point de connexion vers le nœud NAT pour l'accès à Internet.</p>
+                                <figure id="fig-rz5-interfaces">
+                                    <img src="./media/image13.png" alt="État des interfaces de RZ-5" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                                    <figcaption><strong>Figure 1.10</strong> — État des interfaces de RZ-5</figcaption>
+                                </figure>
+                            </section>
+                        </section>
+                    </section>
+
+                    <section class="subsection" id="subsec-web">
+                        <h3>Département Web / Marketing</h3>
+                        <figure id="fig-web-topo">
+                            <img src="./media/image14.png" alt="Topologie du département Web/Marketing dans GNS3" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 1.11</strong> — Topologie du département Web/Marketing dans GNS3</figcaption>
+                        </figure>
+                        <p>La zone Web/Marketing constitue l'une des zones fonctionnelles principales de l'infrastructure réseau de TechSolutions SARL. Elle simule le département responsable de la gestion du site Internet de l'entreprise ainsi que des interactions avec les clients externes.</p>
+
+                        <section class="subsubsection" id="subsubsec-web-composants">
+                            <h4>Composants principaux</h4>
+                            <ul>
+                                <li><strong>Routeur de zone R1</strong> : Routeur Cisco émulé dans GNS3 qui assure l'interconnexion entre la zone locale et le backbone</li>
+                                <li><strong>Switch local Switch1</strong> : Interconnecte les équipements de la zone</li>
+                                <li><strong>Postes clients PC1, PC2, PC3</strong> : Machines VPCS simulant les postes de travail des employés du département Marketing</li>
+                                <li><strong>Cloud externe</strong> : Émulation d'Internet connectée à R1 via un tunnel UDP</li>
+                            </ul>
+                        </section>
+
+                        <section class="subsubsection" id="subsubsec-web-role">
+                            <h4>Rôle fonctionnel</h4>
+                            <p>Cette zone est critique car elle héberge les services Web publics de TechSolutions SARL. Elle doit garantir :</p>
+                            <ul>
+                                <li>Une disponibilité élevée du site Internet</li>
+                                <li>Un accès sécurisé pour les employés internes (quel que soit leur département)</li>
+                                <li>Une protection renforcée contre les menaces externes via filtrage ACL et VPN</li>
+                            </ul>
+                        </section>
+                    </section>
+
+                    <section class="subsection" id="subsec-it">
+                        <h3>Département Supervision / IT</h3>
+                        <figure id="fig-it-topo">
+                            <img src="./media/image15.png" alt="Topologie du département Supervision/IT dans GNS3" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 1.12</strong> — Topologie du département Supervision/IT dans GNS3</figcaption>
+                        </figure>
+                        <p>La zone Supervision/IT est dédiée à l'administration, à la surveillance et à la maintenance de l'infrastructure réseau de TechSolutions SARL.</p>
+
+                        <section class="subsubsection" id="subsubsec-it-composants">
+                            <h4>Composants principaux</h4>
+                            <ul>
+                                <li><strong>Routeur de zone R2</strong> : Assure la liaison entre la zone IT et les réseaux externes via un tunnel UDP</li>
+                                <li><strong>Switch local</strong> : Connectivité entre les postes IT et les machines virtuelles de supervision</li>
+                                <li><strong>VM de supervision</strong> : Machine VPCS pour le monitoring</li>
+                                <li><strong>PC2 et PC3</strong> : Postes administrateurs IT chargés de la gestion du réseau</li>
+                            </ul>
+                        </section>
+
+                        <section class="subsubsection" id="subsubsec-it-securite">
+                            <h4>Connectivité et sécurité</h4>
+                            <ul>
+                                <li>Accès restreint réservé uniquement aux administrateurs IT</li>
+                                <li>Utilisation de tunnels sécurisés pour l'administration à distance</li>
+                                <li>Mise en place de politiques de sécurité renforcées (ACL, journalisation, surveillance active)</li>
+                                <li>Séparation stricte entre trafic utilisateur et trafic d'administration</li>
+                            </ul>
+                        </section>
+                    </section>
+
+                    <section class="subsection" id="subsec-bd">
+                        <h3>Département Base de données / Gestion</h3>
+                        <figure id="fig-bd-topo">
+                            <img src="./media/image16.png" alt="Topologie du département Base de données/Gestion dans GNS3" style="max-width:100%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 1.13</strong> — Topologie du département Base de données/Gestion dans GNS3</figcaption>
+                        </figure>
+                        <p>La zone Base de Données/Gestion constitue une zone critique de l'infrastructure, dédiée à l'hébergement des systèmes de gestion et des bases de données utilisées par les applications internes.</p>
+
+                        <section class="subsubsection" id="subsubsec-bd-composants">
+                            <h4>Composants principaux</h4>
+                            <ul>
+                                <li><strong>Routeur de zone R3</strong> : Interconnexion entre le département et le réseau global</li>
+                                <li><strong>Switch local</strong> : Centralise la connectivité entre les serveurs de base de données et les postes clients</li>
+                                <li><strong>VM2</strong> : Serveur de base de données ou machine d'administration</li>
+                                <li><strong>PC1 et PC2</strong> : Postes clients représentant les utilisateurs du service Gestion</li>
+                            </ul>
+                        </section>
+
+                        <section class="subsubsection" id="subsubsec-bd-securite">
+                            <h4>Connectivité et sécurité</h4>
+                            <ul>
+                                <li>Le sous-réseau est isolé logiquement des autres départements</li>
+                                <li>L'accès aux bases de données est strictement contrôlé via des règles de filtrage réseau</li>
+                                <li>Les communications inter-zones sont sécurisées à l'aide de tunnels chiffrés</li>
+                                <li>Seuls les postes et serveurs autorisés peuvent accéder aux services critiques</li>
+                            </ul>
+                        </section>
+                    </section>
+
+                    <section class="subsection" id="subsec-nfs">
+                        <h3>Département Partage / Collaboration</h3>
+                        <figure id="fig-nfs-topo">
+                            <img src="./media/image17.png" alt="Topologie du département Partage/Collaboration dans GNS3" style="max-width:100%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 1.14</strong> — Topologie du département Partage/Collaboration dans GNS3</figcaption>
+                        </figure>
+                        <p>La zone Partage/Collaboration représente un département stratégique dédié à la centralisation, au stockage et au partage sécurisé des fichiers entre les différents services de l'entreprise via le protocole NFS (Network File System).</p>
+
+                        <section class="subsubsection" id="subsubsec-nfs-composants">
+                            <h4>Composants principaux</h4>
+                            <ul>
+                                <li><strong>Routeur de zone RZ-4</strong> : Connectivité entre le réseau local et le reste de l'infrastructure</li>
+                                <li><strong>Switch local</strong> : Interconnexion des machines clientes et du serveur NFS</li>
+                                <li><strong>NFS Server</strong> : Serveur Linux hébergeant les répertoires partagés exportés via NFS</li>
+                                <li><strong>PC1, PC2, VM1</strong> : Postes clients simulant les utilisateurs du département Collaboration</li>
+                            </ul>
+                        </section>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-ping-init">
+                    <h2>Tests de connectivité initiaux</h2>
+                    <p>Des tests de ping ont été effectués pour valider la connectivité de base entre les différents équipements du réseau. Ces tests permettent de vérifier que :</p>
+                    <ul>
+                        <li>Les interfaces des routeurs sont correctement configurées et activées</li>
+                        <li>Les liaisons physiques et logiques entre routeurs sont opérationnelles</li>
+                        <li>Les postes clients peuvent atteindre leur passerelle par défaut</li>
+                        <li>La communication inter-départements est fonctionnelle via le backbone</li>
+                    </ul>
+                </section>
+            </section>
+
+            <!-- ==================== CHAPTER 2 ==================== -->
+            <section class="chapter" id="chap-systeme">
+                <h1 data-number="2">Partie Système — Déploiement des Services</h1>
+                <p>Ce chapitre décrit les étapes nécessaires pour connecter les machines virtuelles à GNS3 et préparer l'environnement pour l'installation des services.</p>
+
+                <section class="section" id="sec-web">
+                    <h2>Service Web</h2>
+
+                    <section class="subsection" id="subsec-web-vm">
+                        <h3>Création de la machine virtuelle</h3>
+                        <p>Nous avons créé une nouvelle machine virtuelle dans VMware et installé Ubuntu comme système d'exploitation. Cette VM servira de serveur pour le service Web et permettra de tester les communications réseau avec le reste de l'infrastructure.</p>
+                        <figure id="fig-vm-web1">
+                            <img src="./media/image18.jpeg" alt="Création de la VM Ubuntu dans VMware — Étape 1" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.1</strong> — Création de la VM Ubuntu dans VMware — Étape 1</figcaption>
+                        </figure>
+                        <figure id="fig-vm-web2">
+                            <img src="./media/image19.jpeg" alt="Création de la VM Ubuntu dans VMware — Étape 2" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.2</strong> — Création de la VM Ubuntu dans VMware — Étape 2</figcaption>
+                        </figure>
+                        <figure id="fig-vm-web3">
+                            <img src="./media/image20.jpeg" alt="Création de la VM Ubuntu dans VMware — Étape 3" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.3</strong> — Création de la VM Ubuntu dans VMware — Étape 3</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-web-network">
+                        <h3>Configuration du réseau de la VM</h3>
+                        <p>Nous avons ajouté un adaptateur réseau VMnet2 Host-Only dans les paramètres de la VM. L'utilisation de VMnet2 Host-Only permet à la VM de communiquer uniquement avec l'hôte et les autres VMs sur ce réseau, garantissant un environnement isolé pour nos tests.</p>
+                        <figure id="fig-vmnet2">
+                            <img src="./media/image21.png" alt="Configuration de l'adaptateur VMnet2 Host-Only" style="max-width:65%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.4</strong> — Configuration de l'adaptateur VMnet2 Host-Only</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-web-gns3">
+                        <h3>Topologie GNS3 et configuration du cloud</h3>
+                        <p>Après avoir configuré la VM, nous avons créé une nouvelle topologie dans GNS3. Nous avons ajouté un <strong>nœud Cloud</strong> qui est lié au switch et connecté au réseau VMnet2. Cela permet à la VM Ubuntu de communiquer avec le reste de l'infrastructure réseau simulée dans GNS3, en reliant le monde virtuel de VMware au réseau simulé.</p>
+                        <figure id="fig-gns3-cloud">
+                            <img src="./media/image22.jpeg" alt="Topologie GNS3 avec le nœud Cloud connecté au switch" style="max-width:65%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.5</strong> — Topologie GNS3 avec le nœud Cloud connecté au switch</figcaption>
+                        </figure>
+                        <figure id="fig-cloud-vmnet2">
+                            <img src="./media/image23.png" alt="Configuration du nœud Cloud lié à VMnet2" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.6</strong> — Configuration du nœud Cloud lié à VMnet2</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-web-yaml">
+                        <h3>Configuration de l'interface réseau (Netplan YAML)</h3>
+                        <p>Nous avons configuré l'interface réseau de la VM en modifiant le fichier YAML correspondant, en spécifiant l'interface <code>ens33</code>. Cela permet de définir l'adresse IP, le masque et les paramètres nécessaires pour que la VM puisse communiquer avec le réseau simulé dans GNS3.</p>
+                        <figure id="fig-yaml-web1">
+                            <img src="./media/image24.jpeg" alt="Configuration réseau de l'interface ens33 dans le fichier YAML" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.7</strong> — Configuration réseau de l'interface ens33 dans le fichier YAML</figcaption>
+                        </figure>
+                        <figure id="fig-yaml-web2">
+                            <img src="./media/image25.png" alt="Validation de la configuration Netplan" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.8</strong> — Validation de la configuration Netplan</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-web-tests">
+                        <h3>Tests de connectivité</h3>
+                        <p>Enfin, nous avons effectué des tests de ping pour vérifier la connectivité entre les différentes machines du LAN et s'assurer que le réseau fonctionne correctement.</p>
+                        <figure id="fig-ping-web1">
+                            <img src="./media/image26.png" alt="Test de ping dans le LAN vers l'interface du routeur" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.9</strong> — Test de ping dans le LAN vers l'interface du routeur</figcaption>
+                        </figure>
+                        <figure id="fig-ping-web2">
+                            <img src="./media/image27.png" alt="Test de ping à partir d'un PC dans le LAN" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.10</strong> — Test de ping à partir d'un PC dans le LAN</figcaption>
+                        </figure>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-nfs">
+                    <h2>Service NFS</h2>
+
+                    <section class="subsection" id="subsec-nfs-install">
+                        <h3>Installation et configuration du serveur NFS</h3>
+                        <p>Le service NFS (Network File System) a été mis en place afin de permettre le partage de ressources de stockage entre plusieurs clients du réseau. Nous avons installé le serveur NFS sur une machine Ubuntu dédiée, puis configuré un répertoire partagé accessible aux clients autorisés.</p>
+                        <p>NFS permet aux machines clientes de monter un répertoire distant comme s'il s'agissait d'un dossier local, facilitant ainsi la collaboration et le partage de fichiers au sein de l'entreprise.</p>
+                        <figure id="fig-nfs-install">
+                            <img src="./media/image28.png" alt="Installation et configuration du serveur NFS" style="max-width:95%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.11</strong> — Installation et configuration du serveur NFS</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-nfs-users">
+                        <h3>Gestion des utilisateurs et des droits d'accès</h3>
+                        <p>Des utilisateurs et groupes ont été créés afin de contrôler l'accès au répertoire partagé. Les permissions ont été définies de manière à garantir la sécurité et l'intégrité des données partagées.</p>
+                        <figure id="fig-nfs-users">
+                            <img src="./media/image29.png" alt="Gestion des utilisateurs et des permissions NFS" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.12</strong> — Gestion des utilisateurs et des permissions NFS</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-nfs-script">
+                        <h3>Automatisation via script Shell</h3>
+                        <p>Un script Shell a été développé pour automatiser l'installation du serveur NFS, la création des utilisateurs et la configuration des répertoires partagés. L'automatisation permet de réduire les erreurs humaines, d'accélérer le déploiement et d'assurer une configuration reproductible.</p>
+                        <figure id="fig-nfs-script">
+                            <img src="./media/image30.png" alt="Script Shell d'automatisation du service NFS" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.13</strong> — Script Shell d'automatisation du service NFS</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-nfs-config">
+                        <h3>Configuration réseau et tests</h3>
+                        <figure id="fig-nfs-yaml">
+                            <img src="./media/image31.png" alt="Fichier YAML pour le service NFS" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.14</strong> — Fichier YAML pour le service NFS</figcaption>
+                        </figure>
+                        <figure id="fig-nfs-ping">
+                            <img src="./media/image32.png" alt="Tests de ping pour le service NFS" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.15</strong> — Tests de ping pour le service NFS</figcaption>
+                        </figure>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-monitoring">
+                    <h2>Monitoring</h2>
+
+                    <section class="subsection" id="subsec-mon-deploy">
+                        <h3>Déploiement de Prometheus et Grafana</h3>
+                        <p>Un système de supervision a été déployé afin de surveiller l'état et les performances des machines du réseau. Prometheus a été utilisé pour la collecte des métriques, tandis que Grafana a permis leur visualisation à travers des tableaux de bord interactifs. Node Exporter a été installé sur les machines supervisées afin de remonter les informations système (CPU, mémoire, disque, réseau).</p>
+                        <p>La supervision permet de détecter rapidement les anomalies et d'assurer la disponibilité continue des services critiques.</p>
+                        <figure id="fig-prometheus">
+                            <img src="./media/image33.jpeg" alt="Interface Prometheus — Targets actifs" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.16</strong> — Interface Prometheus — Targets actifs</figcaption>
+                        </figure>
+                        <figure id="fig-grafana">
+                            <img src="./media/image34.jpeg" alt="Tableau de bord Grafana" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.17</strong> — Tableau de bord Grafana</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-mon-alerts">
+                        <h3>Mise en place d'alertes</h3>
+                        <p>Des règles d'alertes ont été configurées afin de détecter des situations critiques telles qu'une surcharge CPU, un manque de mémoire ou l'indisponibilité d'un service. Les alertes permettent une réaction rapide de l'administrateur système avant qu'un incident n'impacte les utilisateurs.</p>
+                        <figure id="fig-alerts">
+                            <img src="monitoring_alerts.png" alt="Configuration des alertes de supervision" style="max-width:80%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.18</strong> — Configuration des alertes de supervision</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-mon-script">
+                        <h3>Automatisation via script Shell</h3>
+                        <p>Un script Shell a été développé pour automatiser l'installation de Prometheus, Grafana et Node Exporter, ainsi que la configuration des services et leur démarrage automatique. Cette automatisation permet un déploiement rapide, cohérent et reproductible du système de supervision.</p>
+                        <figure id="fig-mon-script">
+                            <img src="./media/image35.png" alt="Script Shell d'automatisation du monitoring" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.19</strong> — Script Shell d'automatisation du monitoring</figcaption>
+                        </figure>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-database">
+                    <h2>Service Base de données</h2>
+                    <p>La configuration de base est identique à celle du service Web, seuls les paramètres réseau dans le fichier YAML changent.</p>
+
+                    <section class="subsection" id="subsec-db-topo">
+                        <h3>Topologie GNS3</h3>
+                        <figure id="fig-db-topo">
+                            <img src="./media/image16.png" alt="Topologie GNS3 pour le service Base de données" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.20</strong> — Topologie GNS3 pour le service Base de données</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-yaml">
+                        <h3>Configuration réseau</h3>
+                        <figure id="fig-db-yaml">
+                            <img src="./media/image36.png" alt="Fichier YAML pour le service Base de données" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.21</strong> — Fichier YAML pour le service Base de données</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-ping">
+                        <h3>Tests de connectivité</h3>
+                        <figure id="fig-db-ping">
+                            <img src="screenshot_ping_db.png" alt="Tests de ping pour le service Base de données" style="max-width:80%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.22</strong> — Tests de ping pour le service Base de données</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-install">
+                        <h3>Installation de MySQL et Apache</h3>
+                        <p>MySQL permet de stocker et gérer les données de manière centralisée, tandis qu'Apache assure l'hébergement des pages Web. Cette architecture est couramment utilisée dans les applications Web dynamiques nécessitant une interaction avec une base de données.</p>
+                        <figure id="fig-db-install">
+                            <img src="./media/image37.png" alt="Installation du serveur MySQL et du serveur Web Apache" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.23</strong> — Installation du serveur MySQL et du serveur Web Apache</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-create">
+                        <h3>Création de la base de données et gestion des droits</h3>
+                        <p>Une base de données a été créée afin de stocker les informations nécessaires à l'application. Deux types de comptes ont été définis : un compte administrateur disposant de tous les privilèges et un compte utilisateur avec des droits limités. La gestion des droits permet de renforcer la sécurité du système en limitant l'accès aux données sensibles uniquement aux utilisateurs autorisés.</p>
+                        <figure id="fig-db-create">
+                            <img src="./media/image38.png" alt="Création de la base de données" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.24</strong> — Création de la base de données</figcaption>
+                        </figure>
+                        <figure id="fig-db-users">
+                            <img src="mysql_users_rights.png" alt="Création des utilisateurs et attribution des privilèges" style="max-width:80%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.25</strong> — Création des utilisateurs et attribution des privilèges</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-liaison">
+                        <h3>Liaison application Web — Base de données</h3>
+                        <p>Une liaison a été établie entre le serveur Web et la base de données afin de permettre à l'application Web d'accéder aux données stockées dans MySQL. Cette connexion permet d'afficher dynamiquement le contenu de la base de données à travers une page Web.</p>
+                        <figure id="fig-db-conn1">
+                            <img src="./media/image39.png" alt="Configuration de la connexion entre l'application Web et la base de données" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.26</strong> — Configuration de la connexion entre l'application Web et la base de données</figcaption>
+                        </figure>
+                        <figure id="fig-db-conn2">
+                            <img src="./media/image40.png" alt="Fichier de connexion à la base de données" style="max-width:85%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.27</strong> — Fichier de connexion à la base de données</figcaption>
+                        </figure>
+                        <figure id="fig-db-web">
+                            <img src="./media/image41.jpeg" alt="Affichage des données de la base via la page Web" style="max-width:75%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.28</strong> — Affichage des données de la base via la page Web</figcaption>
+                        </figure>
+                    </section>
+
+                    <section class="subsection" id="subsec-db-script">
+                        <h3>Automatisation via script Shell</h3>
+                        <p>Un script Shell a été développé afin d'automatiser l'installation de MySQL et Apache, la création de la base de données, des utilisateurs ainsi que la configuration de la connexion entre le serveur Web et la base de données.</p>
+                        <figure id="fig-db-script">
+                            <img src="web_db_script.png" alt="Script Shell d'automatisation du service Web et Base de données" style="max-width:80%; height:auto; display:block; margin:0 auto; border:1px solid var(--border); border-radius:4px;" loading="lazy">
+                            <figcaption><strong>Figure 2.29</strong> — Script Shell d'automatisation du service Web et Base de données</figcaption>
+                        </figure>
+                    </section>
+                </section>
+            </section>
+
+            <!-- ==================== CHAPTER 3 ==================== -->
+            <section class="chapter" id="chap-securite">
+                <h1 data-number="3">Sécurité — Architecture Defense in Depth</h1>
+                <p>Ce chapitre présente l'architecture de sécurité déployée pour protéger l'infrastructure multiservice de TechSolutions SARL. Notre approche repose sur un modèle <strong>Defense in Depth (Défense en profondeur)</strong> à trois couches indépendantes : ACL Cisco (L1), VPN IPsec (L2) et Firewall pfSense (L3).</p>
+
+                <section class="section" id="sec-sec-overview">
+                    <h2>Vue d'ensemble de l'architecture de sécurité</h2>
+                    <p>L'infrastructure implémente un modèle de sécurité à trois couches. Chaque couche protège indépendamment contre un vecteur de menace distinct. Le contournement d'une couche ne permet pas l'accès — l'attaquant fait toujours face aux deux couches restantes.</p>
+
+                    <div class="table-caption" id="tab-sec-stack"><strong>Tableau 3.1</strong> — Matrice de la stack de sécurité</div>
+                    <table>
+                        <thead>
+                            <tr><th>Couche</th><th>Technologie</th><th>Type</th><th>Objectif</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>ACL Cisco</td><td>Filtrage stateless L3/L4</td><td>Segmentation inter-VLAN</td></tr>
+                            <tr><td>2</td><td>VPN IPsec</td><td>Chiffrement site-à-site</td><td>Confidentialité sur backbone</td></tr>
+                            <tr><td>3</td><td>pfSense</td><td>Firewall stateful L3–L7</td><td>Contrôle périphérique</td></tr>
+                        </tbody>
+                    </table>
+
+                    <figure id="fig-defense-depth">
+                        <div class="fbox" style="max-width:90%">
+                            <p style="margin:0;font-weight:700;font-size:1.1rem">Architecture Defense in Depth</p>
+                            <table style="margin:1rem auto;border-collapse:collapse;width:auto">
+                                <tr><td style="border:1px solid var(--border);padding:0.6rem 1.2rem;background:rgba(198,40,40,0.1)"><span class="text-red">Couche 3 — pfSense</span><br><small>Default Deny · Stateful L3–L7 · Logging</small></td></tr>
+                                <tr><td style="border:1px solid var(--border);padding:0.6rem 1.2rem;background:rgba(239,108,0,0.1)"><span class="text-orange">Couche 2 — IPsec VPN</span><br><small>AES Encryption · HMAC-SHA Integrity · PFS</small></td></tr>
+                                <tr><td style="border:1px solid var(--border);padding:0.6rem 1.2rem;background:rgba(30,74,143,0.1)"><span class="text-blue">Couche 1 — Cisco ACL</span><br><small>Implicit Deny · L3/L4 Segmentation · Per-interface</small></td></tr>
+                                <tr><td style="border:1px solid var(--border);padding:0.6rem 1.2rem"><strong>Zones critiques : BD / IT / Web</strong></td></tr>
+                            </table>
+                        </div>
+                        <figcaption><strong>Figure 3.1</strong> — Synthèse de l'architecture Defense in Depth</figcaption>
+                    </figure>
+                </section>
+
+                <section class="section" id="sec-acl">
+                    <h2>Couche 1 — ACL Cisco : Filtrage Stateless L3/L4</h2>
+                    <p>Les ACL sont déployées sur les routeurs d'accès R1–R4 pour renforcer la segmentation inter-départements et protéger les interfaces critiques.</p>
+
+                    <section class="subsection" id="subsec-acl-principe">
+                        <h3>Principe fondamental : Implicit Deny</h3>
+                        <p>Toute ACL se termine par un <code>deny any any</code> invisible. Tout ce qui n'est pas explicitement permis est silencieusement rejeté.</p>
+                    </section>
+
+                    <section class="subsection" id="subsec-acl-matrix">
+                        <h3>Matrice des flux de trafic</h3>
+                        <div class="table-caption" id="tab-acl-matrix"><strong>Tableau 3.2</strong> — Matrice des flux de trafic ACL</div>
+                        <table>
+                            <thead>
+                                <tr><th>Source</th><th>Destination</th><th>Service</th><th>Action</th><th>Justification</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Web LAN 10.10.0.0/19</td><td>192.168.0.1</td><td>TCP 80/443</td><td>PERMIT</td><td>Flux métier — publication Web</td></tr>
+                                <tr><td>IT LAN 10.10.32.0/21</td><td>Any</td><td>TCP 22</td><td>PERMIT</td><td>SSH admin — uniquement zone IT</td></tr>
+                                <tr><td>Any</td><td>BD LAN 10.10.40.0/23</td><td>TCP 3306</td><td>DENY</td><td>MySQL direct bloqué — serveur app uniquement</td></tr>
+                                <tr><td>Collab 10.10.42.0/24</td><td>Web LAN</td><td>ANY</td><td>DENY</td><td>Pas d'accès cross-zone sans backbone</td></tr>
+                                <tr><td>BD LAN 10.10.40.0/23</td><td>192.168.40.1</td><td>TCP 21</td><td>PERMIT</td><td>Transferts FTP contrôlés en zone</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-acl-r3">
+                        <h3>Configuration ACL sur R3 (Protection BD/Gestion)</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>! ACL etendue pour la protection de la zone BD
+ip access-list extended PROTECT_BD
+  ! Autoriser MySQL UNIQUEMENT depuis le serveur Web applicatif
+  permit tcp host 10.10.0.2 10.10.40.0 0.0.1.255 eq 3306
+
+  ! Autoriser SSH administration depuis zone IT uniquement
+  permit tcp 10.10.32.0 0.0.7.255 10.10.40.0 0.0.1.255 eq 22
+
+  ! Autoriser scraping Prometheus depuis serveur monitoring
+  permit tcp host 10.10.32.101 10.10.40.0 0.0.1.255 eq 9100
+
+  ! Implicit deny -- tout autre trafic silencieusement droppe
+  ! deny ip any any  (invisible, toujours actif)
+
+! Application sur l'interface LAN
+interface FastEthernet0/1
+  ip access-group PROTECT_BD in</code></pre>
+                        <div class="listing-caption"><strong>Listing 3.1</strong> — ACL <code>PROTECT_BD</code> sur le routeur R3</div>
+                    </section>
+
+                    <section class="subsection" id="subsec-acl-verify">
+                        <h3>Vérification et compteurs</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>R3# show ip access-lists
+Extended IP access list PROTECT_BD
+    10 permit tcp host 10.10.0.2 10.10.40.0 0.0.1.255 eq 3306 (45 matches)
+    20 permit tcp 10.10.32.0 0.0.7.255 10.10.40.0 0.0.1.255 eq 22 (12 matches)
+    30 permit tcp host 10.10.32.101 10.10.40.0 0.0.1.255 eq 9100 (892 matches)</code></pre>
+                        <div class="listing-caption"><strong>Listing 3.2</strong> — Vérification des compteurs ACL</div>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-ipsec">
+                    <h2>Couche 2 — VPN IPsec : Chiffrement Site-à-Site</h2>
+                    <p>Les tunnels IPsec protègent le trafic inter-sites traversant le backbone public. IKE Phase 1 établit le canal de contrôle sécurisé ; Phase 2 négocie les SA de protection des données.</p>
+
+                    <section class="subsection" id="subsec-ipsec-topo">
+                        <h3>Topologie des tunnels</h3>
+                        <p>Le tunnel IPsec principal est établi entre le routeur R1 (zone Web) et R3 (zone BD) pour sécuriser les échanges entre le serveur Web et la base de données.</p>
+
+                        <div class="table-caption" id="tab-ipsec-params"><strong>Tableau 3.3</strong> — Paramètres du tunnel IPsec R1 ↔ R3</div>
+                        <table>
+                            <thead>
+                                <tr><th>Paramètre</th><th>Valeur</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Paire</td><td>R1 (Web) ↔ R3 (BD)</td></tr>
+                                <tr><td>Adresses publiques</td><td>50.50.50.41 / 50.50.50.49</td></tr>
+                                <tr><td>Réseaux privés</td><td>10.10.0.0/19 / 10.10.40.0/23</td></tr>
+                                <tr><td>Phase 1 — Encryption</td><td>AES</td></tr>
+                                <tr><td>Phase 1 — Hash</td><td>SHA</td></tr>
+                                <tr><td>Phase 1 — Authentification</td><td>Pre-shared key</td></tr>
+                                <tr><td>Phase 1 — DH Group</td><td>2</td></tr>
+                                <tr><td>Phase 1 — Lifetime</td><td>86400s</td></tr>
+                                <tr><td>Phase 2 — Transform Set</td><td>ESP-AES, ESP-SHA-HMAC</td></tr>
+                                <tr><td>Phase 2 — PFS</td><td>Group 2</td></tr>
+                                <tr><td>Clé pré-partagée</td><td>TechSol$VPN2024</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-ipsec-r1">
+                        <h3>Configuration complète (côté R1)</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>! ============================================================
+! Phase 1 -- ISAKMP Policy
+! ============================================================
+crypto isakmp policy 10
+  encryption aes
+  hash sha
+  authentication pre-share
+  group 2
+  lifetime 86400
+
+! Cle pre-partagee pour le pair R3
+crypto isakmp key TechSol$VPN2024 address 50.50.50.49
+
+! ============================================================
+! Phase 2 -- Transform-Set
+! ============================================================
+crypto ipsec transform-set TS_TECHSOL esp-aes esp-sha-hmac
+
+! ============================================================
+! Trafic interessant (ce qui entre dans le tunnel)
+! ============================================================
+ip access-list extended CRYPTO_R1_R3
+  permit ip 10.10.0.0 0.0.31.255 10.10.40.0 0.0.1.255
+
+! ============================================================
+! Crypto Map -- lie pair, transform-set et ACL
+! ============================================================
+crypto map CM_TECHSOL 10 ipsec-isakmp
+  set peer 50.50.50.49
+  set transform-set TS_TECHSOL
+  match address CRYPTO_R1_R3
+  set pfs group2
+
+! ============================================================
+! Application sur l'interface WAN
+! ============================================================
+interface FastEthernet0/0
+  crypto map CM_TECHSOL</code></pre>
+                        <div class="listing-caption"><strong>Listing 3.3</strong> — Configuration IPsec complète — Routeur R1</div>
+                    </section>
+
+                    <section class="subsection" id="subsec-ipsec-why">
+                        <h3>Pourquoi IPsec ?</h3>
+                        <div class="table-caption" id="tab-vpn-compare"><strong>Tableau 3.4</strong> — Comparaison des solutions VPN</div>
+                        <table>
+                            <thead>
+                                <tr><th>Option</th><th>Décision</th><th>Raison</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>IPsec Site-à-Site</td><td><span class="text-green">Sélectionné</span></td><td>Support IOS natif, cryptographie forte, optimisé routeur-à-routeur</td></tr>
+                                <tr><td>SSL VPN</td><td>Rejeté</td><td>Orienté utilisateur, non adapté aux tunnels permanents</td></tr>
+                                <tr><td>GRE (nu)</td><td>Rejeté</td><td>Pas de chiffrement — données en clair sur backbone</td></tr>
+                                <tr><td>MPLS VPN</td><td>Rejeté</td><td>Nécessite infrastructure opérateur, hors scope</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-ipsec-verify">
+                        <h3>Validation du tunnel</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>! Etat Phase 1 (ISAKMP SA)
+R1# show crypto isakmp sa
+IPv4 Crypto ISAKMP SA
+dst             src             state          conn-id status
+50.50.50.49     50.50.50.41     QM_IDLE           1001 ACTIVE
+
+! Etat Phase 2 (IPsec SA) -- CRITIQUE
+R1# show crypto ipsec sa
+interface: FastEthernet0/0
+    Crypto map tag: CM_TECHSOL, local addr 50.50.50.41
+
+   local  ident (addr/mask/prot/port): (10.10.0.0/255.255.224.0/0/0)
+   remote ident (addr/mask/prot/port): (10.10.40.0/255.255.254.0/0/0)
+   current_peer 50.50.50.49 port 500
+
+    #pkts encaps: 1247, #pkts encrypt: 1247, #pkts digest: 1247
+    #pkts decaps: 1189, #pkts decrypt: 1189, #pkts verify: 1189
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #pkts no sa (send): 0, #pkts invalid sa (rcv): 0</code></pre>
+                        <div class="listing-caption"><strong>Listing 3.4</strong> — Validation de l'état du tunnel IPsec</div>
+                        <p><strong>Points de vigilance :</strong> Les compteurs <code>pkts encaps</code> et <code>pkts decaps</code> doivent être supérieurs à 0 (trafic bidirectionnel confirmé). Les compteurs <code>invalid sa</code> et <code>no sa</code> doivent impérativement être à 0.</p>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-pfsense">
+                    <h2>Couche 3 — Firewall pfSense : Inspection Stateful</h2>
+                    <p>pfSense est déployé en périphérie entre le backbone et les zones sensibles, fournissant une inspection stateful avec politique Default Deny.</p>
+
+                    <section class="subsection" id="subsec-pfsense-zones">
+                        <h3>Architecture des zones</h3>
+                        <div class="table-caption" id="tab-pfsense-zones"><strong>Tableau 3.5</strong> — Architecture des zones pfSense</div>
+                        <table>
+                            <thead>
+                                <tr><th>Interface</th><th>Zone</th><th>Réseau</th><th>Niveau de confiance</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><code>em0</code> WAN</td><td>Non fiable</td><td>50.50.50.x</td><td>0 — Tout bloquer en entrée</td></tr>
+                                <tr><td><code>em1</code> LAN</td><td>Fiable</td><td>10.10.32.0/21</td><td>3 — Admin IT</td></tr>
+                                <tr><td><code>em2</code> DMZ</td><td>Semi-fiable</td><td>10.10.0.0/19</td><td>1 — Services Web</td></tr>
+                                <tr><td><code>em3</code> BD</td><td>Critique</td><td>10.10.40.0/23</td><td>2 — Restreint</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-pfsense-rules">
+                        <h3>Règles de firewall</h3>
+                        <div class="table-caption" id="tab-pfsense-rules"><strong>Tableau 3.6</strong> — Règles de firewall pfSense</div>
+                        <table>
+                            <thead>
+                                <tr><th>#</th><th>Direction</th><th>Source</th><th>Dest</th><th>Port</th><th>Action</th><th>Log</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>WAN → ANY</td><td>ANY</td><td>ANY</td><td>ALL</td><td><strong>BLOCK</strong></td><td>Oui</td></tr>
+                                <tr><td>2</td><td>LAN → WAN</td><td>IT 10.10.32.0/21</td><td>ANY</td><td>TCP 443</td><td>PASS</td><td>Oui</td></tr>
+                                <tr><td>3</td><td>LAN → WAN</td><td>IT 10.10.32.0/21</td><td>ANY</td><td>TCP 22</td><td>PASS</td><td>Oui</td></tr>
+                                <tr><td>4</td><td>DMZ → BD</td><td>10.10.0.2 (Web)</td><td>10.10.40.2</td><td>TCP 3306</td><td>PASS</td><td>Oui</td></tr>
+                                <tr><td>5</td><td>DMZ → BD</td><td>Autre</td><td>10.10.40.0/23</td><td>TCP 3306</td><td>BLOCK</td><td>Oui</td></tr>
+                                <tr><td>6</td><td>LAN → BD</td><td>IT 10.10.32.0/21</td><td>10.10.40.0/23</td><td>TCP 22</td><td>PASS</td><td>Oui</td></tr>
+                                <tr><td>7</td><td>DMZ → LAN</td><td>ANY</td><td>10.10.32.0/21</td><td>ALL</td><td>BLOCK</td><td>Oui</td></tr>
+                                <tr><td>9</td><td>ANY</td><td>ANY</td><td>ANY</td><td>ALL</td><td>BLOCK</td><td>Oui</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="subsection" id="subsec-acl-vs-pfsense">
+                        <h3>ACL vs pfSense — Distinction fondamentale</h3>
+                        <div class="table-caption" id="tab-acl-vs-pfsense"><strong>Tableau 3.7</strong> — Comparaison ACL Cisco vs pfSense</div>
+                        <table>
+                            <thead>
+                                <tr><th>Critère</th><th>Cisco ACL</th><th>pfSense</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Modèle d'état</td><td><strong>Stateless</strong> — paquet indépendant</td><td><strong>Stateful</strong> — table de session</td></tr>
+                                <tr><td>Couches OSI</td><td>L3/L4</td><td>L3 à <strong>L7</strong></td></tr>
+                                <tr><td>Trafic retour</td><td>Doit être explicitement permis</td><td><strong>Auto-autorisé</strong> pour sessions établies</td></tr>
+                                <tr><td>Détection attaque</td><td>Limitée</td><td>SYN flood, port scan, fragments malformés</td></tr>
+                                <tr><td>Usage optimal</td><td>Segmentation inter-VLAN rapide</td><td>Contrôle périphérique, enforcement DMZ</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-synthese-sec">
+                    <h2>Synthèse Defense in Depth</h2>
+                    <figure id="fig-attack-flow">
+                        <div class="fbox" style="max-width:90%">
+                            <p style="margin:0 0 1rem 0;font-weight:700">Flux d'attaque simulé et barrières de sécurité</p>
+                            <table style="margin:0 auto;border-collapse:collapse;width:auto">
+                                <tr><td style="text-align:right;padding:0.4rem 0.8rem;border:none"><span class="text-red">Attaquant</span></td><td style="padding:0.4rem 0.8rem;border:none">→</td><td style="padding:0.4rem 0.8rem;border:none;text-align:left"><strong>[Couche 3]</strong> pfSense Default Deny</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none">↓ Si contourné</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none;text-align:left"><strong>[Couche 2]</strong> IPsec AES Chiffré</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none">↓ Si contourné</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none;text-align:left"><strong>[Couche 1]</strong> ACL Implicit Deny</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none">↓ Si contourné</td></tr>
+                                <tr><td style="border:none"></td><td style="border:none"></td><td style="padding:0.4rem 0.8rem;border:none;text-align:left"><span class="text-green">[Données Critiques]</span></td></tr>
+                            </table>
+                        </div>
+                        <figcaption><strong>Figure 3.2</strong> — Flux d'attaque et barrières de sécurité</figcaption>
+                    </figure>
+                    <p>Un attaquant qui brèche la Couche 3 (pfSense) fait face à des données chiffrées à la Couche 2 (IPsec). Si positionné sur le backbone, la Couche 1 (ACL) impose les restrictions source/destination au niveau routeur. <strong>Trois barrières indépendantes — chacune seule est insuffisante ; ensemble elles sont résilientes.</strong></p>
+                </section>
+            </section>
+
+            <!-- ==================== CHAPTER 4 ==================== -->
+            <section class="chapter" id="chap-tests">
+                <h1 data-number="4">Tests et Validation</h1>
+                <p>Ce chapitre regroupe l'ensemble des procédures de test et de validation effectuées pour garantir le bon fonctionnement, la sécurité et la performance de l'infrastructure.</p>
+
+                <section class="section" id="sec-test-conn">
+                    <h2>Tests de connectivité</h2>
+                    <div class="table-caption" id="tab-test-conn"><strong>Tableau 4.1</strong> — Matrice des tests de connectivité</div>
+                    <table>
+                        <thead>
+                            <tr><th>Test</th><th>Commande</th><th>Résultat attendu</th><th>Statut</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Passerelle LAN</td><td><code>ping 10.10.0.1</code></td><td>0% perte, &lt;2ms</td><td><span class="text-green">OK</span></td></tr>
+                            <tr><td>Routage inter-dept</td><td><code>ping 10.10.40.1</code> depuis Web</td><td>0% perte via backbone</td><td><span class="text-green">OK</span></td></tr>
+                            <tr><td>Attribution DHCP</td><td><code>ip dhcp</code> sur VPCS</td><td>Séquence DORA, IP assignée</td><td><span class="text-green">OK</span></td></tr>
+                            <tr><td>Accès Internet</td><td><code>ping 8.8.8.8</code></td><td>0% perte</td><td><span class="text-green">OK</span></td></tr>
+                            <tr><td>Application Web</td><td><code>curl http://10.10.0.2/</code></td><td>Réponse HTML Apache</td><td><span class="text-green">OK</span></td></tr>
+                            <tr><td>Montage NFS</td><td><code>mount -t nfs 10.10.42.2:/...</code></td><td>Montage réussi</td><td><span class="text-green">OK</span></td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="section" id="sec-test-ospf">
+                    <h2>Validation du routage OSPF</h2>
+                    <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                    <pre><code>! Verification des adjacences OSPF
+show ip ospf neighbor
+! Attendu : tous les routeurs backbone en etat FULL
+
+! Verification de la table de routage OSPF
+show ip route ospf
+! Attendu : routes O pour les 18 sous-reseaux
+
+! Verification du chemin specifique
+show ip route 10.10.40.0
+! Attendu : route OSPF via backbone avec next-hop correct</code></pre>
+                    <div class="listing-caption"><strong>Listing 4.1</strong> — Validation des adjacences OSPF</div>
+                </section>
+
+                <section class="section" id="sec-test-sec">
+                    <h2>Validation de la sécurité</h2>
+
+                    <section class="subsection" id="subsec-test-acl">
+                        <h3>Validation ACL</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>! Compteurs de hits ACL
+show ip access-lists
+! Verifier : les compteurs incrementent sur les regles deny
+! quand du trafic bloque est tente</code></pre>
+                        <div class="listing-caption"><strong>Listing 4.2</strong> — Vérification des compteurs ACL</div>
+                    </section>
+
+                    <section class="subsection" id="subsec-test-ipsec">
+                        <h3>Validation VPN IPsec</h3>
+                        <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                        <pre><code>! Etat du tunnel Phase 1
+show crypto isakmp sa
+! Attendu : QM_IDLE (Phase 1 active)
+
+! Etat du tunnel Phase 2
+show crypto ipsec sa
+! Attendu : pkts encaps > 0 ET pkts decaps > 0
+! CRITIQUE : pkts invalid/no sa doivent etre a 0</code></pre>
+                        <div class="listing-caption"><strong>Listing 4.3</strong> — Vérification de l'état du tunnel IPsec</div>
+                    </section>
+                </section>
+
+                <section class="section" id="sec-test-mon">
+                    <h2>Validation du monitoring</h2>
+                    <div class="code-header"><span class="code-label">Bash</span><button onclick="copyCode(this)">Copier</button></div>
+                    <pre><code># Sante des targets Prometheus
+curl http://10.10.32.101:9090/api/v1/targets | python3 -m json.tool
+# Attendu : tous les targets "state": "up"
+
+# Metriques Node Exporter
+curl http://10.10.0.2:9100/metrics | grep node_cpu
+# Attendu : metriques CPU pour le serveur Web</code></pre>
+                    <div class="listing-caption"><strong>Listing 4.4</strong> — Validation des targets Prometheus</div>
+                </section>
+
+                <section class="section" id="sec-test-web-db">
+                    <h2>Validation du service Web + Base de données</h2>
+                    <p>L'application Web affiche dynamiquement les données de la base MySQL. La <a href="#fig-db-web">Figure 2.28</a> (page correspondante) confirme le bon fonctionnement de la liaison application–base de données.</p>
+                </section>
+            </section>
+
+            <!-- ==================== CONCLUSION ==================== -->
+            <section class="chapter" id="chap-conclusion">
+                <h1 data-number="5">Conclusion</h1>
+                <p>Ce projet a permis de concevoir et déployer une infrastructure réseau multiservice complète pour TechSolutions SARL, répondant aux exigences d'une entreprise moderne segmentée en quatre départements fonctionnels.</p>
+                <p>Les principaux accomplissements incluent :</p>
+                <ul>
+                    <li><strong>Architecture réseau robuste</strong> : Backbone maillé avec OSPF, VLSM optimisé, et répartition sur 5 machines physiques via tunnels GNS3</li>
+                    <li><strong>Services déployés</strong> : Serveur Web Apache/PHP, base de données MySQL, partage NFS, et supervision Prometheus/Grafana</li>
+                    <li><strong>Sécurité en profondeur</strong> : Trois couches indépendantes (ACL, IPsec, pfSense) assurant une défense résiliente</li>
+                    <li><strong>Automatisation</strong> : Scripts Shell pour le déploiement reproductible des services</li>
+                </ul>
+                <p>L'infrastructure démontre une maîtrise des concepts avancés de routage, de virtualisation, de services système Linux, et surtout de l'intégration de la sécurité dès la conception (Security by Design).</p>
+            </section>
+
+            <!-- ==================== APPENDIX ==================== -->
+            <section class="chapter" id="app-config">
+                <h1 data-number="A">Configurations complètes des routeurs</h1>
+
+                <section class="section" id="app-rz1">
+                    <h2>Configuration de RZ-1 (Backbone)</h2>
+                    <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                    <pre><code>hostname RZ-1
+!
+interface Serial0/0
+  ip address 50.50.50.1 255.255.255.252
+  no shutdown
+!
+interface Serial0/1
+  ip address 50.50.50.17 255.255.255.252
+  no shutdown
+!
+interface Serial0/2
+  ip address 50.50.50.29 255.255.255.252
+  no shutdown
+!
+interface Serial0/3
+  ip address 50.50.50.37 255.255.255.252
+  no shutdown
+!
+interface FastEthernet0/0
+  ip address 50.50.50.41 255.255.255.252
+  no shutdown
+!
+router ospf 1
+  router-id 1.1.1.1
+  network 50.50.50.0 0.0.0.255 area 0
+!
+end</code></pre>
+                    <div class="listing-caption"><strong>Listing A.1</strong> — Configuration complète RZ-1</div>
+                </section>
+
+                <section class="section" id="app-r1">
+                    <h2>Configuration de R1 (Web/Marketing)</h2>
+                    <div class="code-header"><span class="code-label">Cisco IOS</span><button onclick="copyCode(this)">Copier</button></div>
+                    <pre><code>hostname R1
+!
+interface FastEthernet0/0
+  ip address 50.50.50.42 255.255.255.252
+  no shutdown
+!
+interface FastEthernet0/1
+  ip address 10.10.0.1 255.255.224.0
+  ip helper-address 10.10.0.1
+  no shutdown
+!
+! Pool DHCP pour Web/Marketing
+ip dhcp pool WEB_MARKETING
+  network 10.10.0.0 255.255.224.0
+  default-router 10.10.0.1
+  dns-server 8.8.8.8 8.8.4.4
+  lease 7
+!
+router ospf 1
+  router-id 10.1.1.1
+  network 50.50.50.40 0.0.0.3 area 0
+  network 10.10.0.0 0.0.31.255 area 0
+!
+end</code></pre>
+                    <div class="listing-caption"><strong>Listing A.2</strong> — Configuration complète R1</div>
+                </section>
+            </section>
+
+            <footer style="margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.9rem">
+                <p>Rapport de Projet Intégré — Réseaux et Systèmes<br>ESPRIT 3A33 — Année Universitaire 2024–2025</p>
+            </footer>
+        </main>
+    </div>
+
+    <button class="back-to-top" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Retour en haut">&#8679;</button>
+
+    <script>
+        // Build TOC dynamically
+        const toc = document.getElementById('toc');
+        const headings = document.querySelectorAll('main h1, main h2, main h3, main h4');
+        headings.forEach((h, i) => {
+            if (!h.id) h.id = 'heading-' + i;
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.textContent = h.textContent;
+            a.className = 'toc-' + h.tagName.toLowerCase();
+            if (h.tagName === 'H1') a.classList.add('toc-h1');
+            if (h.tagName === 'H2') a.classList.add('toc-h2');
+            if (h.tagName === 'H3') a.classList.add('toc-h3');
+            if (h.tagName === 'H4') a.classList.add('toc-h4');
+            li.appendChild(a);
+            toc.appendChild(li);
+        });
+
+        // Active section highlighting
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+                    const link = document.querySelector('.toc a[href="#' + entry.target.id + '"]');
+                    if (link) link.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-20% 0px -60% 0px' });
+        headings.forEach(h => observer.observe(h));
+
+        // Back to top
+        const btt = document.getElementById('btt');
+        window.addEventListener('scroll', () => {
+            btt.style.display = window.scrollY > 600 ? 'flex' : 'none';
+        });
+
+        // Theme toggle
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+        const saved = localStorage.getItem('theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+        else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        // Copy code
+        function copyCode(btn) {
+            const pre = btn.closest('.code-header').nextElementSibling;
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = 'Copié !';
+                setTimeout(() => btn.textContent = orig, 1500);
+            });
+        }
+
+        // Mobile sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.querySelector('.sidebar-overlay').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
